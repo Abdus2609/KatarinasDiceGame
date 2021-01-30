@@ -1,6 +1,12 @@
 import random
 
+PLAYER_1_SCORE = 0
+PLAYER_2_SCORE = 0
 
+ROUND = 1
+
+
+# enter name of each player
 def enter_details():
     player1Name = str(input("Player 1, please enter your name: ")).capitalize()
     player2Name = str(input("Player 2, please enter your name: ")).capitalize()
@@ -11,6 +17,7 @@ def enter_details():
     return player1Name, player2Name
 
 
+# function for rolling two dice, calculates their score and checks if extra die needs to be rolled 
 def roll_Two_Dice(name):
     print(name + ", please get ready. It's your turn...")
     playerRoll1 = random.randint(1, 6)
@@ -26,6 +33,7 @@ def roll_Two_Dice(name):
     return points
 
 
+# function for rolling one dice - that way, two separate functions for a double and a tiebreaker need to be made
 def roll_One_Dice(name):
     print(name + ", you need to roll one extra die.")
     extraRoll = random.randint(1, 6)
@@ -34,6 +42,7 @@ def roll_One_Dice(name):
     return extraRoll
 
 
+# calculates score based on the even or odd
 def calculate_score(name, score):
     if score % 2 == 0:
         score += 10
@@ -43,6 +52,7 @@ def calculate_score(name, score):
     return score
 
 
+# function for determining the winner in case of tiebreak
 def tie_breaker(player1Name, player2Name):
     print("Welcome to the tie breaker. Get ready!")
     player1TB = roll_One_Dice(player1Name)
@@ -55,6 +65,7 @@ def tie_breaker(player1Name, player2Name):
     return winner
 
 
+# decides the winner based on player scores or calls tie_break()
 def winner_decider(player1Name, player2Name, player1Score, player2Score):
     if player1Score > player2Score:
         winner = player1Name
@@ -68,6 +79,7 @@ def winner_decider(player1Name, player2Name, player1Score, player2Score):
     return winner
 
 
+# saves name and score of winner to external txt file
 def save_data(winnerName, winnerScore):
     print("Saving data...")
     print()
@@ -78,6 +90,7 @@ def save_data(winnerName, winnerScore):
     file.close()
 
 
+# loads data from external text file and stores in a database which can be extracted from
 def load_data():
     dataBase = []
     file = open("winnerdetails.txt", "r")
@@ -93,6 +106,7 @@ def load_data():
     return dataBase
 
 
+# sorts the database in terms of score and prints a leaderboard of top five scores 
 def leaderboard(dataBase):
     print("*" * 30)
     print("LEADERBOARD")
@@ -107,18 +121,11 @@ def leaderboard(dataBase):
 
     print()
     print("*" * 30)
-
-##############################################################################
-
-
-PLAYER_1_SCORE = 0
-PLAYER_2_SCORE = 0
-
-ROUND = 1
+    
 
 player1Name, player2Name = enter_details()
 
-while ROUND <= 5:
+while ROUND <= 5: # recurses the roll_two_dice() function for five rounds and accumulates the players' scores at the end of each round
     print("Round", ROUND, "is about to start.")
     player1Points = roll_Two_Dice(player1Name)
     player1Score = calculate_score(player1Name, player1Points)
